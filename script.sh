@@ -1,9 +1,16 @@
 #!/bin/bash
 
-awk -F ';' '$1=="-" && $2!="-" && $3=="-" && $4!="-" && $5=="-" {print $2 ";" $4}' wildwater.dat > Usine.txt
 
-awk -F ';' '$1=="-" && $2!="-" && $3!="-" && $4!="-" && $5!="-" {print $2 ";" $3 ";" $4}' wildwater.dat > Source.txt
+if [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "max" ];then
+bash max.sh $1  
+elif [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "src" ]; then
+bash src.sh $1
+# elif [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "real" ]; then
+#bash real.sh $1
+#elif pour leaks
 
-awk -F ';' '$1=="-" && $2!="-" && $3!="-" && $4!="-" && $5!="-" {print $2 ";" $3 ";" $4 ";" $5}' wildwater.dat > Real.txt
+else
+	echo "Argument incorrect"
+fi
 
 
