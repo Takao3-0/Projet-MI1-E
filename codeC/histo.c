@@ -1,5 +1,6 @@
 #include "head.h"
 #include "histo.h"
+#include "AVL.h"
 
 /*
 
@@ -32,80 +33,85 @@ Cahier des charges
 */
 
 
-/*
-Ici, pour chaque usine on somme la volume d'eau reçu par les sources.*/
-                /*sscanf(chaine, "%[^;];%[^;];%d;%d;%d",
-                    perso.listedescapacites[j].nom,
-                    perso.listedescapacites[j].description,
-                    &perso.listedescapacites[j].damage,
-                    &perso.listedescapacites[j].type,
-                    &perso.listedescapacites[j].cd);*/
-pAVL VolumeCapte(FILE * fileUsine, FILE * filesource)
+void VolumeCapte(FILE * fileUsine, FILE * filesource) //src
 {
-    char line[50]; 
+    char line[128]; 
     int h;
     char IDUsine[128];
     char IDSource[128];
     int volumeSource;
-    int volumeMaxUsine;
     pAVL elmt;
-    if(fileUsine && fileUsine)
+    pAVL AVL_VC = NULL;
+    if(fileUsine && filesource)
     {
-        pAVL AVL_VC = NULL;
-        while(fgets(line,sizeof(line),fileUsine))
+        printf(VERT"On fait la partie src\n"RESET);
+        while (fgets(line, sizeof(line), filesource))
         {
-            sscanf(line, "%[^;];%d",
-                IDUsine,
-                &volumeMaxUsine);
-        }
-        while(fgets(line, sizeof(line),filesource))
-        {
-            sscanf(line, "%[^;];%[^;];%d",
-                IDSource,
-                IDUsine,
-                &volumeSource);
-            if (!(elmt = recherche(AVL_VC, IDUsine)))
+            if (sscanf(line, "%[^;];%[^;];%d", IDSource, IDUsine, &volumeSource) != 3) continue;
+            elmt = recherche(AVL_VC, IDUsine);
+            if (!elmt)
             {
-                AVL_VC = insertionAVL(AVL_VC,IDUsine, &h);
+                printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
+                h = 0;
+                AVL_VC = insertionAVL(AVL_VC, IDUsine, &h);
+                elmt = recherche(AVL_VC, IDUsine);
             }
-            else 
-            {
-                elmt->Total_Source_Vol += volumeSource;
-            }
-        }
-
-        /*while(fgets(line,sizeof(line),fileUsine))
-        {
-            sscanf(line, "%[^;];%d",
-                IDUsine,
-                &volumeMaxUsine);
-            
-            pAVL elmt1 = recherche(AVL_VC, IDUsine);
-            if(elmt1)
-            {
-                elmt1->Capacity_Max = volumeMaxUsine;
-                if (elmt1->Capacity_Max < elmt1->Total_Source_Vol)
-                {
-
-                }
-            }
-        }*/
-
-
+            elmt->Total_Source_Vol += volumeSource;
+        }        
 
     }
     else 
     {
         printf("Le fichier reçu est vide!\n");
     }
+    
+    /*On cree le fichier return*/
+
+    FILE * returnSRC = fopen("returnsrc.txt", "w");
+    if (returnSRC) parcoursprefixe(AVL_VC, returnSRC);        
+    else printf(ROUGE"returnSRC n'existe pas!\n"RESET);
+    suppressionAVL(AVL_VC);
+    
 }
 
-pAVL VolumeTraite()
+void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
 {
+    char line[128]; 
+    int h;
+    char IDUsine[128];
+    char IDSource[128];
+    int volumeSource;
+    float leaks;
+    pAVL elmt;
+    pAVL AVL_VT = NULL;
+    if(fileUsine && filesourceL)
+    {
+        printf(VERT"On fait la partie real\n"RESET);
+        while (fgets(line, sizeof(line), filesourceL))
+        {
+            if (sscanf(line, "%[^;];%[^;];%d;%f", IDSource, IDUsine, &volumeSource, &leaks) != 4) continue;
+            elmt = recherche(AVL_VT, IDUsine);
+            if (!elmt)
+            {
+                printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
+                h = 0;
+                AVL_VT = insertionAVL(AVL_VT, IDUsine, &h);
+                elmt = recherche(AVL_VT, IDUsine);
+            }
+            elmt->Total_Source_Vol += (volumeSource * leaks);
+        }        
 
+    }
+    else 
+    {
+        printf("Le fichier reçu est vide!\n");
+    }    
+
+    //On cree le fichier return
+    FILE * returnREAL = fopen("returnreal.txt", "w");
+    if (returnREAL) ;
+    else printf(ROUGE"returnREAL n'existe pas!\n"RESET);
+
+    parcoursprefixe(AVL_VT, returnREAL);    
 }
 
-int ProjetHISTO(pAVL histo, int key)
-{
-
-}
