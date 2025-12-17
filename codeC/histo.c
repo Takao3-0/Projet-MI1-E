@@ -1,6 +1,4 @@
-#include "head.h"
 #include "histo.h"
-#include "AVL.h"
 
 /*
 
@@ -98,7 +96,7 @@ void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
                 AVL_VT = insertionAVL(AVL_VT, IDUsine, &h);
                 elmt = recherche(AVL_VT, IDUsine);
             }
-            elmt->Total_Source_Vol += (volumeSource * leaks);
+            elmt->Total_Source_Vol += volumeSource - (volumeSource * (leaks / 100));
         }        
 
     }
@@ -112,6 +110,9 @@ void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
     if (returnREAL) ;
     else printf(ROUGE"returnREAL n'existe pas!\n"RESET);
 
-    parcoursprefixe(AVL_VT, returnREAL);    
+    parcoursprefixe(AVL_VT, returnREAL);  
+    suppressionAVL(AVL_VT);  
 }
+
+
 

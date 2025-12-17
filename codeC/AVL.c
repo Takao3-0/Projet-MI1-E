@@ -246,32 +246,6 @@ pAVL suppression_AVL(pAVL a, const char *key, int *h)
 }
 
 
-//Partie ARBRE CLASSIQUE pour le calcul des fuites
-
-typedef struct ArbreClassique
-{
-    int valeur;
-    struct ArbreClassique *fg;
-    struct ArbreClassique *fd;
-} ArbreClassique, *pArbreClassique;
-
-pArbreClassique creerArbreClassique(int valeur)
-{
-    pArbreClassique nouveau = malloc(sizeof(ArbreClassique));
-    if (nouveau)
-    {
-        nouveau->valeur = valeur;
-        nouveau->fg = NULL;
-        nouveau->fd = NULL;
-        return nouveau;
-    }
-    return NULL;
-}
-
-
-
-
-
 //Debug 
 
 void traiter(pAVL a, FILE * returnfile)
