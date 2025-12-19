@@ -1,19 +1,20 @@
 #ifndef ARBREC_H
 #define ARBREC_H
 #include "head.h"
+#include "type.h"
+#include "AVL.h"
 
 typedef struct ArbreClassique
 {
-    char *id;
+    struct NodeL *Node;
 
-    double volume;
-    double leak;
-
-    struct ArbreClassique * next_bro;
-    struct ArbreClassique * first_child;
+    struct ArbreClassique *F;
+    struct ArbreClassique *E;
 } ArbreClassique, *pAC;
 
 
-pAC creerArbreClassique(char *id, double leak, double vol);
+pAC creerArbreClassique(pNodeL node);
+
+pAC InsertionAC(pAC Reseau);
 
 #endif

@@ -31,8 +31,6 @@
 #define VIOLET_CLAIR2      "\x1b[38;5;141m"
 #define VIOLET_TRES_CLAIR    "\x1b[38;5;183m"
 
-#include "histo.h"
-#include "leaks.h"
-#include "type.h"
+
 
 #endif 

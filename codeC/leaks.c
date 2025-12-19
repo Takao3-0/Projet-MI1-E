@@ -13,6 +13,7 @@ Format fichier Enfant
 
 Usine;Unite_actuelle;Unite_Suivante;Volume_Max;Fuite
 
+
 -;Facility complex #RH400057F;Storage #13178;-;3.777  Ligne Usine->Stockage
 
 
@@ -66,12 +67,14 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE * fEnfant)
         if(strcmp(ID,IDUsine) == 0) usine_true = true;
     }
     printf("%s\n", usine_true ? VERT"L'usine existe"RESET : ROUGE"L'usine n'existe pas"RESET);
-    if (!usine_true) return -1; 
+    if (!usine_true) return -1;
 
     pAVL Index = creerAVL(IDUsine,AVL_LEAKS); //AVL index
+    
 
-    pAC Reseau = creerArbreClassique(IDUsine,0,volume); //0 pour fuite l'usine ne fuit pas et le volume vient grace à real
+    pAC Reseau = creerArbreClassique(Index->data.LeaksPart); //0 pour fuite l'usine ne fuit pas et le volume vient grace à real
 
+    int h = 0;
     while(fgets(line,sizeof(line), fEnfant))
     {
         sscanf(line,"%[^;];%[^;];%[^;];%[^;];%f",ID,ActualID,Next,tiret,&leak);
@@ -82,15 +85,22 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE * fEnfant)
 
         //On a passé la batterie de test!
 
-        pAVL parent = recherche(Index,ActualID);
-        
+        //pAVL parent = insertionAVL(Index,ActualID,&h,AVL_LEAKS);
 
+        pAVL tamp = NULL;
+        pAVL parent = NULL;
+        if (!(tamp = recherche(Index,Next)))
+        {
+            Index = insertionAVL(Index,Next,&h,AVL_LEAKS);
+            parent = recherche(Index,ActualID);//On cherche le parent dans l'AVL
+            Reseau = InsertionAC(Reseau);
+        }
+        else 
+        {
 
-
-
-
-
+        }
     }
+    
 
 
 

@@ -17,7 +17,7 @@ all: $(EXEC)
 $(BUILD_DIR):
 	$(MKDIR)
 
-$(BUILD_DIR)/code.o: $(SRC_DIR)/code.c $(SRC_DIR)/head.h | $(BUILD_DIR)
+$(BUILD_DIR)/code.o: $(SRC_DIR)/code.c $(SRC_DIR)/head.h $(SRC_DIR)/type.h $(SRC_DIR)/histo.h $(SRC_DIR)/leaks.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/code.c -o $@
 
 $(BUILD_DIR)/histo.o: $(SRC_DIR)/histo.c  $(SRC_DIR)/histo.h | $(BUILD_DIR)

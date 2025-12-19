@@ -32,8 +32,7 @@ pAVL creerAVL(char *e/*Identifiant*/, AVLKey fkey)
             nouveau->data.LeaksPart->ID = strdup(e);
             CHECK_MALLOC(nouveau->ID, free(nouveau->data.HistoPart->ID); free(nouveau->ID); free(nouveau));
 
-            nouveau->data.LeaksPart->leak = 0;
-            nouveau->data.LeaksPart->Enfant = nouveau->data.LeaksPart->FrereSuivant = NULL;
+            nouveau->data.LeaksPart->leak = nouveau->data.LeaksPart->volume_recu = 0;
         }
         nouveau->fg = nouveau->fd = NULL;
 

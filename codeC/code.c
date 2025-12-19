@@ -1,4 +1,7 @@
 #include "head.h"
+#include "histo.h"
+#include "leaks.h"
+#include "type.h"
 
 int main(int argc, char *argv[]) 
 {
@@ -64,10 +67,10 @@ int main(int argc, char *argv[])
             ./wildwater    script.sh    leaks    ID_Usine    File1      File2
             argv[0]        argv[1]      argv[2]  argv[3]     argv[4]    argv[5]
         */
-        FILE * fUsine = fopen(argv[4], "r");
-        if (!fUsine)
+        FILE * fEnfant = fopen(argv[4], "r");
+        if (!fEnfant)
         {
-            fclose(fUsine); 
+            fclose(fEnfant); 
             return 2;                   
         }
         FILE * fSourceL = fopen(argv[5], "r");
@@ -76,7 +79,7 @@ int main(int argc, char *argv[])
             fclose(fSourceL); 
             return 2;                   
         }
-        leaks(argv[3],fSourceL);
+        leaks(argv[3],fSourceL, fEnfant);
     }
     else 
     {

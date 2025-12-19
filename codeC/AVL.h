@@ -33,8 +33,7 @@ typedef struct NodeH
 
 typedef struct NodeL {
     char *ID;
-    struct NodeL* Enfant;  
-    struct NodeL* FrereSuivant; 
+    double volume_recu;
     float leak;     
 } NodeL, *pNodeL;
 
