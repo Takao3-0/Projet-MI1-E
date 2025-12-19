@@ -42,14 +42,14 @@ void VolumeCapte(FILE * filesource) //src
     pAVL AVL_VC = NULL;
     if(filesource)
     {
-        printf(VERT"On fait la partie src\n"RESET);
+        //printf(VERT"On fait la partie src\n"RESET);
         while (fgets(line, sizeof(line), filesource))
         {
             if (sscanf(line, "%[^;];%[^;];%d", IDSource, IDUsine, &volumeSource) != 3) continue;
             elmt = recherche(AVL_VC, IDUsine);
             if (!elmt)
             {
-                printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
+                //printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
                 h = 0;
                 AVL_VC = insertionAVL(AVL_VC, IDUsine, &h,AVL_HISTO);
                 elmt = recherche(AVL_VC, IDUsine);
@@ -84,14 +84,14 @@ void VolumeTraite(FILE * filesourceL) //real
     pAVL AVL_VT = NULL;
     if(filesourceL)
     {
-        printf(VERT"On fait la partie real\n"RESET);
+        //printf(VERT"On fait la partie real\n"RESET);
         while (fgets(line, sizeof(line), filesourceL))
         {
             if (sscanf(line, "%[^;];%[^;];%d;%f", IDSource, IDUsine, &volumeSource, &leaks) != 4) continue;
             elmt = recherche(AVL_VT, IDUsine);
             if (!elmt)
             {
-                printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
+                //printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
                 h = 0;
                 AVL_VT = insertionAVL(AVL_VT, IDUsine, &h,AVL_HISTO);
                 elmt = recherche(AVL_VT, IDUsine);

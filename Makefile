@@ -26,7 +26,7 @@ $(BUILD_DIR)/histo.o: $(SRC_DIR)/histo.c  $(SRC_DIR)/histo.h | $(BUILD_DIR)
 $(BUILD_DIR)/AVL.o: $(SRC_DIR)/AVL.c $(SRC_DIR)/AVL.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/AVL.c -o $@
 
-$(BUILD_DIR)/ArbreC.o: $(SRC_DIR)/ArbreC.c $(SRC_DIR)/ArbreC.h | $(BUILD_DIR)
+$(BUILD_DIR)/ArbreC.o: $(SRC_DIR)/ArbreC.c $(SRC_DIR)/ArbreC.h $(SRC_DIR)/AVL.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $(SRC_DIR)/ArbreC.c -o $@
 
 $(BUILD_DIR)/leaks.o: $(SRC_DIR)/leaks.c $(SRC_DIR)/leaks.h

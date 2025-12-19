@@ -34,7 +34,10 @@ typedef struct NodeH
 typedef struct NodeL {
     char *ID;
     double volume_recu;
-    float leak;     
+    float leak; 
+    
+    struct NodeL * enfant;
+    struct NodeL * frere;
 } NodeL, *pNodeL;
 
 

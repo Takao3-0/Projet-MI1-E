@@ -273,8 +273,8 @@ pAVL suppression_AVL(pAVL a, const char *key, int *h)
 void traiter(pAVL a, FILE * returnfile, HistoMode mode)
 {
     
-    printf(BLEU"Identifiant de l'usine : "ROUGE"%s\n"RESET, a->ID);
-    printf(VERT"Volume recu de l'usine :%lf\n"RESET, (mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
+    //printf(BLEU"Identifiant de l'usine : "ROUGE"%s\n"RESET, a->ID);
+    //printf(VERT"Volume recu de l'usine :%lf\n"RESET, (mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
     fprintf(returnfile,"%s;%lf\n",a->ID,(mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
 }
 

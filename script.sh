@@ -10,12 +10,11 @@ elif [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "real" ] && [ ! $4 ]; then
 bash real.sh $1
 #elif pour leaks
 
-elif [ -f $1 ] && [ "$2" = "leaks" ] && [ -n "$3" ] && [ -z "$4" ]; then
+elif [ -f $1 ] && [ "$2" = "leaks" ] && [ -n "$3" ];then
 	awk -F ';' '$1=="-" && $2!="-" && $3!="-" && $4!="-" && $5!="-" {print $2 ";" $3 ";" $4 ";" $5}' $1 > SourceL.txt
-	awk -F ';' '$1=="-" && $2!="-" && $3=="-" && $4!="-" && $5=="-" {print $2 ";" $4}' $1 > Usine.txt
+	awk -F ';' '$1!="-" && $2!="-" && $3!="-" && $4=="-" && $5!="-" {print $2 ";" $3 ";" $4 ";" $5}' $1 > Facility.txt
 
-	./wildwater "$1" leaks "$3" Usine.txt SourceL.txt
-
+	./wildwater "$1" leaks "$3" Facility.txt SourceL.txt
 else
 	echo "Argument incorrect"
 fi

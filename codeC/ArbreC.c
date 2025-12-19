@@ -4,22 +4,37 @@
 
 //Partie ARBRE CLASSIQUE pour le calcul des fuites
 
-pAC creerArbreClassique(pNodeL node)
+
+pNodeL creerNode(char *e, AVLKey mode)
 {
-    pAC nouveau = malloc(sizeof(ArbreClassique));
+    pNodeL nouveau = malloc(sizeof(NodeL));
     if(nouveau)
     {
-        nouveau->Node = node;
-        return nouveau;
+        nouveau->ID = strdup(e);
+        CHECK_MALLOC(nouveau->ID, free(nouveau->ID); free(nouveau));
+
+        nouveau->leak = nouveau->volume_recu = 0;
+    }
+}
+
+pNodeL InsertionNode(pNodeL parent, pNodeL assign)
+{
+    if(parent)
+    {
+        pNodeL enfant = parent->enfant;
+        if(!enfant) parent->enfant = assign;
+        else 
+        {
+            assign->frere = enfant;
+            parent->enfant = assign;
+        }
     }
     else return NULL;
 }
 
 
-pAC InsertionAC(pAC Reseau)
-{
-    
-}
+
+
 
 
 

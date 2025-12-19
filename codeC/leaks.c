@@ -72,20 +72,17 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE * fEnfant)
     pAVL Index = creerAVL(IDUsine,AVL_LEAKS); //AVL index
     
 
-    pAC Reseau = creerArbreClassique(Index->data.LeaksPart); //0 pour fuite l'usine ne fuit pas et le volume vient grace à real
+    pNodeL Reseau = creerArbreClassique(Index->data.LeaksPart); //0 pour fuite l'usine ne fuit pas et le volume vient grace à real
 
     int h = 0;
     while(fgets(line,sizeof(line), fEnfant))
     {
-        sscanf(line,"%[^;];%[^;];%[^;];%[^;];%f",ID,ActualID,Next,tiret,&leak);
+        sscanf(line,"%[^;];%[^;];%[^;];%f",ActualID,Next,tiret,&leak);
 
         if(strcmp(tiret, "-") != 0) return 4; //Erreur de formatage;
-        if(strcmp(ID, IDUsine) != 0) return 4; //Idem
         if(leak < 0) return 4; //Idem, une fuite ne peux pas être négative;
 
         //On a passé la batterie de test!
-
-        //pAVL parent = insertionAVL(Index,ActualID,&h,AVL_LEAKS);
 
         pAVL tamp = NULL;
         pAVL parent = NULL;
@@ -93,11 +90,11 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE * fEnfant)
         {
             Index = insertionAVL(Index,Next,&h,AVL_LEAKS);
             parent = recherche(Index,ActualID);//On cherche le parent dans l'AVL
-            Reseau = InsertionAC(Reseau);
+            pNodeL NodeParent ;
         }
         else 
         {
-
+            
         }
     }
     
@@ -112,6 +109,7 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE * fEnfant)
 
 
     fclose(VT);
+    fclose(returnleaks);
     return 0;
 
 }
