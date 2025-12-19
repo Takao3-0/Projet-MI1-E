@@ -1,14 +1,12 @@
 #ifndef _HEAD
 #define _HEAD
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <stdbool.h>
-
 
 //Importation des couleurs 
 
@@ -33,10 +31,8 @@
 #define VIOLET_CLAIR2      "\x1b[38;5;141m"
 #define VIOLET_TRES_CLAIR    "\x1b[38;5;183m"
 
-
-//On defini les macro utiles au rotations
-
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#include "histo.h"
+#include "leaks.h"
+#include "type.h"
 
 #endif 

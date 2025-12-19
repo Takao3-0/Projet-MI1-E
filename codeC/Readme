@@ -1,0 +1,16 @@
+/*
+
+Les return 
+
+    return 0 -> Pas d'erreur
+    return 1 -> Commande inconnue 
+    return 2 -> Fichier vide ou inexistant
+
+
+
+
+
+
+
+
+*/

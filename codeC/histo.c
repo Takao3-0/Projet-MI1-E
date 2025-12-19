@@ -31,7 +31,7 @@ Cahier des charges
 */
 
 
-void VolumeCapte(FILE * fileUsine, FILE * filesource) //src
+void VolumeCapte(FILE * filesource) //src
 {
     char line[128]; 
     int h;
@@ -40,7 +40,7 @@ void VolumeCapte(FILE * fileUsine, FILE * filesource) //src
     int volumeSource;
     pAVL elmt;
     pAVL AVL_VC = NULL;
-    if(fileUsine && filesource)
+    if(filesource)
     {
         printf(VERT"On fait la partie src\n"RESET);
         while (fgets(line, sizeof(line), filesource))
@@ -51,10 +51,10 @@ void VolumeCapte(FILE * fileUsine, FILE * filesource) //src
             {
                 printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
                 h = 0;
-                AVL_VC = insertionAVL(AVL_VC, IDUsine, &h);
+                AVL_VC = insertionAVL(AVL_VC, IDUsine, &h,AVL_HISTO);
                 elmt = recherche(AVL_VC, IDUsine);
             }
-            elmt->Total_Source_Vol += volumeSource;
+            elmt->data.HistoPart->Total_Source_Vol += volumeSource;
         }        
 
     }
@@ -66,13 +66,13 @@ void VolumeCapte(FILE * fileUsine, FILE * filesource) //src
     /*On cree le fichier return*/
 
     FILE * returnSRC = fopen("returnsrc.txt", "w");
-    if (returnSRC) parcoursprefixe(AVL_VC, returnSRC);        
+    if (returnSRC) parcoursprefixe(AVL_VC, returnSRC,SRC);        
     else printf(ROUGE"returnSRC n'existe pas!\n"RESET);
     suppressionAVL(AVL_VC);
     
 }
 
-void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
+void VolumeTraite(FILE * filesourceL) //real
 {
     char line[128]; 
     int h;
@@ -82,7 +82,7 @@ void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
     float leaks;
     pAVL elmt;
     pAVL AVL_VT = NULL;
-    if(fileUsine && filesourceL)
+    if(filesourceL)
     {
         printf(VERT"On fait la partie real\n"RESET);
         while (fgets(line, sizeof(line), filesourceL))
@@ -93,10 +93,10 @@ void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
             {
                 printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
                 h = 0;
-                AVL_VT = insertionAVL(AVL_VT, IDUsine, &h);
+                AVL_VT = insertionAVL(AVL_VT, IDUsine, &h,AVL_HISTO);
                 elmt = recherche(AVL_VT, IDUsine);
             }
-            elmt->Total_Source_Vol += volumeSource - (volumeSource * (leaks / 100));
+            elmt->data.HistoPart->Total_Real_Vol += volumeSource - (volumeSource * (leaks / 100));
         }        
 
     }
@@ -110,8 +110,9 @@ void VolumeTraite(FILE * fileUsine, FILE * filesourceL) //real
     if (returnREAL) ;
     else printf(ROUGE"returnREAL n'existe pas!\n"RESET);
 
-    parcoursprefixe(AVL_VT, returnREAL);  
-    suppressionAVL(AVL_VT);  
+    parcoursprefixe(AVL_VT, returnREAL,REAL);  
+    suppressionAVL(AVL_VT); 
+    fclose(returnREAL); 
 }
 
 

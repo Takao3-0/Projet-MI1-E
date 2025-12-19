@@ -1,5 +1,4 @@
 #include "head.h"
-#include "histo.h"
 
 int main(int argc, char *argv[]) 
 {
@@ -28,7 +27,7 @@ int main(int argc, char *argv[])
                     fclose(fSource); 
                     return 2;                   
                 }
-                VolumeCapte(fUsine,fSource);
+                VolumeCapte(fSource);
                 fclose(fUsine);
                 fclose(fSource);
             }
@@ -46,7 +45,7 @@ int main(int argc, char *argv[])
                     fclose(fSourceL); 
                     return 2;                   
                 }
-                VolumeTraite(fUsine,fSourceL);
+                VolumeTraite(fSourceL);
                 fclose(fUsine);
                 fclose(fSourceL);                
             }
@@ -59,19 +58,25 @@ int main(int argc, char *argv[])
             printf(ROUGE"Il n'y a pas assez d'argement pour leaks\n");
             return 3;
         }
+        else printf("Fonction leaks\n"RESET);
         /*
         Pour leak la commande attendu du shell sera 
-            ./wildwater    script.sh    leaks    File.txt    ID_usine
-            argv[0]        argv[1]      argv[2]  argv[3]     argv[4]
+            ./wildwater    script.sh    leaks    ID_Usine    File1      File2
+            argv[0]        argv[1]      argv[2]  argv[3]     argv[4]    argv[5]
         */
-        FILE * fUsine = fopen(argv[3], "r");
+        FILE * fUsine = fopen(argv[4], "r");
         if (!fUsine)
         {
             fclose(fUsine); 
             return 2;                   
         }
-
-
+        FILE * fSourceL = fopen(argv[5], "r");
+        if (!fSourceL)
+        {
+            fclose(fSourceL); 
+            return 2;                   
+        }
+        leaks(argv[3],fSourceL);
     }
     else 
     {

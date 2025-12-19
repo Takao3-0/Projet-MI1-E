@@ -1,17 +1,40 @@
 #include "AVL.h"
-#include "head.h"
 
 //Partie arbre AVL 
 
-pAVL creerAVL(char *e/*Identifiant*/)
+pAVL creerAVL(char *e/*Identifiant*/, AVLKey fkey)
 {
     pAVL nouveau = malloc(sizeof(AVL));
     if (nouveau)
     {
         nouveau->ID = strdup(e); //https://koor.fr/C/cstring/strdup.wp pour copier une chaine de caractère, il faut penser a la free mais je le ferais en mm temps que l'avl entier
+        CHECK_MALLOC(nouveau->ID, free(nouveau));
 
-        nouveau->Capacity_Max = nouveau->Total_Source_Vol = nouveau->Total_Real_Vol = 0;
+        //On assigne notre clé fourni pour l'utilisation de l'union
+        nouveau->key = fkey;
 
+
+        if(nouveau->key == AVL_HISTO)
+        {
+            nouveau->data.HistoPart = malloc(sizeof(NodeH));
+            CHECK_MALLOC(nouveau->data.HistoPart,free(nouveau->ID); free(nouveau));
+
+            nouveau->data.HistoPart->ID = strdup(e);
+            CHECK_MALLOC(nouveau->ID, free(nouveau->data.HistoPart->ID); free(nouveau->ID); free(nouveau));
+
+            nouveau->data.HistoPart->Capacity_Max = nouveau->data.HistoPart->Total_Source_Vol = nouveau->data.HistoPart->Total_Real_Vol = 0;
+        }
+        else if(nouveau->key == AVL_LEAKS)
+        {
+            nouveau->data.LeaksPart = malloc(sizeof(NodeL));
+            CHECK_MALLOC(nouveau->data.LeaksPart,free(nouveau->ID); free(nouveau));
+
+            nouveau->data.LeaksPart->ID = strdup(e);
+            CHECK_MALLOC(nouveau->ID, free(nouveau->data.HistoPart->ID); free(nouveau->ID); free(nouveau));
+
+            nouveau->data.LeaksPart->leak = 0;
+            nouveau->data.LeaksPart->Enfant = nouveau->data.LeaksPart->FrereSuivant = NULL;
+        }
         nouveau->fg = nouveau->fd = NULL;
 
         nouveau->equi = 0; //on assigne à 0 puisque pour le moment les fg et fd sont null.
@@ -20,7 +43,7 @@ pAVL creerAVL(char *e/*Identifiant*/)
     else return NULL;
 }
 
-pAVL recherche(pAVL a, char * e) //On cherche une usine
+pAVL recherche(pAVL a, char * e) //On fait la recherche en fonction de l'identifiant
 {
     //https://koor.fr/C/cstring/strcmp.wp
     if(!a)
@@ -41,21 +64,21 @@ pAVL recherche(pAVL a, char * e) //On cherche une usine
     } 
 }
 
-pAVL insertionAVL(pAVL a, char * e/*identifiant*/, int *h /*Facteur d'equi*/) //On insere en fonction de l'identifiant "e"
+pAVL insertionAVL(pAVL a, char * e/*identifiant*/, int *h, AVLKey fkey) //On insere en fonction de l'identifiant "e"
 {
 
     //Insertion brute
     if(!a)
     {
-        return creerAVL(e);
+        return creerAVL(e,fkey);
     }
     else if((strcmp(a->ID,e)) < 0 ) //On va à gauche
     {
-        a->fg = insertionAVL(a->fg,e,h);
+        a->fg = insertionAVL(a->fg,e,h,fkey);
     }
     else if ((strcmp(a->ID,e)) > 0) //On va à droite
     {
-        a->fd = insertionAVL(a->fd,e,h);
+        a->fd = insertionAVL(a->fd,e,h,fkey);
     }
     else //L'element est déjà présent
     {
@@ -167,7 +190,7 @@ pAVL equilibreAVL(pAVL a)
     return a;
 }
 
-
+/* Inutile 
 //Partie supression
 
 pAVL sup_min(pAVL a, pAVL *minNode, int *h)
@@ -206,7 +229,7 @@ pAVL suppression_AVL(pAVL a, const char *key, int *h)
         return a;
     }
 
-    /* cmp == 0 */
+    // cmp == 0 
     pAVL toFree = a;
 
     if (a->fg == NULL) {
@@ -244,26 +267,26 @@ pAVL suppression_AVL(pAVL a, const char *key, int *h)
     }
     return a;
 }
-
+*/
 
 //Debug 
 
-void traiter(pAVL a, FILE * returnfile)
+void traiter(pAVL a, FILE * returnfile, HistoMode mode)
 {
+    
     printf(BLEU"Identifiant de l'usine : "ROUGE"%s\n"RESET, a->ID);
-    printf(VERT"Volume recu de l'usine :%lf\n"RESET, a->Total_Source_Vol);
-    fprintf(returnfile,"%s;%lf\n",a->ID,a->Total_Source_Vol);
+    printf(VERT"Volume recu de l'usine :%lf\n"RESET, (mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
+    fprintf(returnfile,"%s;%lf\n",a->ID,(mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
 }
 
-
-void parcoursprefixe(pAVL racine, FILE * returnfile)
+void parcoursprefixe(pAVL racine, FILE * returnfile, HistoMode mode)
 {
     pAVL a = racine;
     if(a)
     {
-        traiter(a, returnfile);
-        parcoursprefixe(a->fg, returnfile);
-        parcoursprefixe(a->fd, returnfile);        
+        traiter(a, returnfile,mode);
+        parcoursprefixe(a->fg, returnfile,mode);
+        parcoursprefixe(a->fd, returnfile,mode);        
     }
 }
 

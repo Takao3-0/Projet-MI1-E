@@ -3,17 +3,6 @@
 
 //Partie ARBRE CLASSIQUE pour le calcul des fuites
 
-typedef struct ArbreClassique
-{
-    char *id;
-
-    double volume;
-    double leak;
-
-    struct ArbreClassique * next_bro;
-    struct ArbreClassique * first_child;
-} ArbreClassique, *pAC;
-
 pAC creerArbreClassique(char *id, double leak, double vol)
 {
     pAC nouveau = malloc(sizeof(ArbreClassique));
@@ -29,4 +18,8 @@ pAC creerArbreClassique(char *id, double leak, double vol)
     }
     else return NULL;
 }
+
+
+
+
 
