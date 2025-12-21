@@ -20,7 +20,7 @@ pAVL creerAVL(char *e/*Identifiant*/, AVLKey fkey)
             CHECK_MALLOC(nouveau->data.HistoPart,free(nouveau->ID); free(nouveau));
 
             nouveau->data.HistoPart->ID = strdup(e);
-            CHECK_MALLOC(nouveau->ID, free(nouveau->data.HistoPart->ID); free(nouveau->ID); free(nouveau));
+            CHECK_MALLOC(nouveau->data.HistoPart->ID, free(nouveau->data.HistoPart); free(nouveau->ID); free(nouveau));
 
             nouveau->data.HistoPart->Capacity_Max = nouveau->data.HistoPart->Total_Source_Vol = nouveau->data.HistoPart->Total_Real_Vol = 0;
         }
@@ -30,7 +30,7 @@ pAVL creerAVL(char *e/*Identifiant*/, AVLKey fkey)
             CHECK_MALLOC(nouveau->data.LeaksPart,free(nouveau->ID); free(nouveau));
 
             nouveau->data.LeaksPart->ID = strdup(e);
-            CHECK_MALLOC(nouveau->ID, free(nouveau->data.LeaksPart->ID); free(nouveau->ID); free(nouveau));
+            CHECK_MALLOC(nouveau->data.LeaksPart->ID, free(nouveau->data.LeaksPart); free(nouveau->ID); free(nouveau));
 
             nouveau->data.LeaksPart->leak = nouveau->data.LeaksPart->volume_recu = 0;
             nouveau->data.LeaksPart->ac = NULL;
@@ -225,12 +225,10 @@ void freeAVL(pAVL a)
             free(a->data.HistoPart);
             a->data.HistoPart = NULL;
         }
-    } else if (a->key == AVL_LEAKS) {
+    } 
+    else if (a->key == AVL_LEAKS) {
         if (a->data.LeaksPart) {
-            if (a->data.LeaksPart->ac) {
-                free(a->data.LeaksPart->ac);
-                a->data.LeaksPart->ac = NULL;
-            }
+            a->data.LeaksPart->ac = NULL;   // surtout pas free ici
             free(a->data.LeaksPart->ID);
             free(a->data.LeaksPart);
             a->data.LeaksPart = NULL;
@@ -238,7 +236,7 @@ void freeAVL(pAVL a)
     }
 
     free(a->ID);
-
     free(a);
 }
+
 

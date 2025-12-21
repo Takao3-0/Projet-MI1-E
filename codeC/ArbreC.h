@@ -16,10 +16,13 @@ typedef struct AC
 
 
 
+
+
 pNodeL creerNode(char *e);
 pNodeL InsertionNode(pNodeL parent, pNodeL assign);
 
 pAC creerAC(pNodeL info);
+void freeAC(pAC a);
 void InsertionAC(pAC parent, pAC child);
 
 #endif

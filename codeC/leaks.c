@@ -214,8 +214,16 @@ void calculVolume(pAC Reseau, double *perte, double *perteMax, pAC *TPerteMax)//
     else return;
 }
 
+
+void free_leaks_all(pAC reseau, pAVL indexInfo)
+{
+    if (reseau) freeAC(reseau);       // libère uniquement les AC*
+    if (indexInfo) freeAVL(indexInfo); // libère NodeL/ID + AVL*
+}
+
 int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
 {
+    int rturn = 0;
     if (!IDUsine || !fSourceL || !fEnfant) return 2;
 
     char line[128];
@@ -327,8 +335,6 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
     printf("Le tronçon qui pert le plus est : %s -> %s avec un volume de %lf perdu!\n",TPM->node->ID,TPM->enfant->node->ID,perteMax);
 
     //debug_arbre_leaks(Reseau);
-    free(IndexInfo);
-    IndexInfo = NULL;
     //rturn
     FILE *returnleaks = fopen("returnleaks.dat", "w");
     if (returnleaks) {
@@ -337,6 +343,8 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
         fprintf(returnleaks,"Le tronçon qui pert le plus est : %s -> %s avec un volume de %lf perdu!\n",TPM->node->ID,TPM->enfant->node->ID,perteMax);
         fclose(returnleaks);
     }
+    free_leaks_all(Reseau, IndexInfo);
+    IndexInfo = NULL;
     return 0;
 }
 

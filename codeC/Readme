@@ -7,7 +7,7 @@ Le programme permet de traiter différents modes d’analyse (historique, source
 ⚙️ Fonctionnalités principales
 🔹 histo
 
-Analyse des capacités et volumes (max, source, réel)
+Analyse des capacités et volumes (max, src, real)
 
 Utilise un AVL indexé par identifiant
 
@@ -91,23 +91,20 @@ make
 make clean
 
 
-Le Makefile est portable Linux / Windows (PowerShell).
+Le Makefile est pour Linux (fonctionne très bien sur mon VPS avec Ubuntu)
 
 ▶️ Exécution
 
 Exemple :
 
-./wildwater data.csv leaks "Facility complex #RH400057F" Facility.txt SourceL.txt
+./script.sh data.csv leaks/histo "Nom d'usine"/src/real/max/all
 
 
 Les scripts .sh fournis facilitent l’exécution selon le mode :
 
 src.sh
-
 real.sh
-
 leaks.sh
-
 max.sh
 
 📁 Organisation du projet

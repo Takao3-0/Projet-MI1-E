@@ -46,6 +46,17 @@ void InsertionAC(pAC parent, pAC child)
     parent->enfant = child;
 }
 
+void freeAC(pAC a)
+{
+    if (a)
+    {
+        freeAC(a->enfant);
+        freeAC(a->frere);
+        free(a);        
+    }
+    else return;
+}
+
 
 
 

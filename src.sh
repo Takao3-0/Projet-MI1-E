@@ -4,6 +4,7 @@ LC_ALL=C awk -F ';' '$1=="-" && $2!="-" && $3!="-" && $4!="-" && $5!="-" {print 
 
 echo "Début d'execution du C:"
 CURRENT1=$(date +%s%3N)
+valgrind --leak-check=full --show-leak-kinds=all \
 ./wildwater "$1" histo src Source.txt
 CURRENT2=$(date +%s%3N)
 

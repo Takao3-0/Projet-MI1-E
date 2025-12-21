@@ -66,6 +66,8 @@ int main(int argc, char *argv[])
             return 2;                   
         }
         leaks(argv[3],fSourceL, fEnfant);
+        fclose(fSourceL);
+        fclose(fEnfant);
     }
     else 
     {
