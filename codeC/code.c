@@ -18,38 +18,24 @@ int main(int argc, char *argv[])
             printf("Commande histo entrée!\n");
             if (strcmp(argv[3], "src") == 0)
             {
-                FILE *fUsine  = fopen(argv[4], "r");
-                if (!fUsine)
-                {
-                    fclose(fUsine); 
-                    return 2;                   
-                }
-                FILE *fSource = fopen(argv[5], "r");
+                FILE *fSource = fopen(argv[4], "r");
                 if (!fSource)
                 {
                     fclose(fSource); 
                     return 2;                   
                 }
                 VolumeCapte(fSource);
-                fclose(fUsine);
                 fclose(fSource);
             }
             else if (strcmp(argv[3], "real") == 0)
             {
-                FILE * fUsine   = fopen(argv[4], "r");
-                if (!fUsine)
-                {
-                    fclose(fUsine); 
-                    return 2;                   
-                }
-                FILE * fSourceL = fopen(argv[5], "r");
+                FILE * fSourceL = fopen(argv[4], "r");
                 if (!fSourceL)
                 {
                     fclose(fSourceL); 
                     return 2;                   
                 }
                 VolumeTraite(fSourceL);
-                fclose(fUsine);
                 fclose(fSourceL);                
             }
         }   
@@ -61,7 +47,7 @@ int main(int argc, char *argv[])
             printf(ROUGE"Il n'y a pas assez d'argement pour leaks\n");
             return 3;
         }
-        else printf("Fonction leaks\n"RESET);
+        else printf(BLEU"Fonction leaks\n"RESET);
         /*
         Pour leak la commande attendu du shell sera 
             ./wildwater    script.sh    leaks    ID_Usine    File1      File2

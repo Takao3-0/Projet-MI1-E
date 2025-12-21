@@ -35,9 +35,8 @@ typedef struct NodeL {
     char *ID;
     double volume_recu;
     float leak; 
+    struct AC *ac; //c'est cette ligne qui sert d'index
     
-    struct NodeL * enfant;
-    struct NodeL * frere;
 } NodeL, *pNodeL;
 
 
@@ -90,6 +89,6 @@ pAVL rotation_double_droite(pAVL a);
 
 void parcoursprefixe(pAVL racine, FILE * returnfile, HistoMode mode);
 
-void suppressionAVL(pAVL a);
+void freeAVL(pAVL a);
 
 #endif

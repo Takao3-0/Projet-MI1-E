@@ -5,7 +5,21 @@
 #include "AVL.h"
 
 
+typedef struct AC
+{
+    struct NodeL *node;
 
+    struct AC * enfant;
+    struct AC * frere;  
+
+}AC, *pAC;
+
+
+
+pNodeL creerNode(char *e);
 pNodeL InsertionNode(pNodeL parent, pNodeL assign);
+
+pAC creerAC(pNodeL info);
+void InsertionAC(pAC parent, pAC child);
 
 #endif

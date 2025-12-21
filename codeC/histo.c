@@ -68,8 +68,9 @@ void VolumeCapte(FILE * filesource) //src
     FILE * returnSRC = fopen("returnsrc.txt", "w");
     if (returnSRC) parcoursprefixe(AVL_VC, returnSRC,SRC);        
     else printf(ROUGE"returnSRC n'existe pas!\n"RESET);
-    suppressionAVL(AVL_VC);
-    
+    freeAVL(AVL_VC);
+    AVL_VC = NULL; 
+    fclose(returnSRC); 
 }
 
 void VolumeTraite(FILE * filesourceL) //real
@@ -111,7 +112,8 @@ void VolumeTraite(FILE * filesourceL) //real
     else printf(ROUGE"returnREAL n'existe pas!\n"RESET);
 
     parcoursprefixe(AVL_VT, returnREAL,REAL);  
-    suppressionAVL(AVL_VT); 
+    freeAVL(AVL_VT);
+    AVL_VT = NULL; 
     fclose(returnREAL); 
 }
 

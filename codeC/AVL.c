@@ -30,9 +30,10 @@ pAVL creerAVL(char *e/*Identifiant*/, AVLKey fkey)
             CHECK_MALLOC(nouveau->data.LeaksPart,free(nouveau->ID); free(nouveau));
 
             nouveau->data.LeaksPart->ID = strdup(e);
-            CHECK_MALLOC(nouveau->ID, free(nouveau->data.HistoPart->ID); free(nouveau->ID); free(nouveau));
+            CHECK_MALLOC(nouveau->ID, free(nouveau->data.LeaksPart->ID); free(nouveau->ID); free(nouveau));
 
             nouveau->data.LeaksPart->leak = nouveau->data.LeaksPart->volume_recu = 0;
+            nouveau->data.LeaksPart->ac = NULL;
         }
         nouveau->fg = nouveau->fd = NULL;
 
@@ -189,85 +190,6 @@ pAVL equilibreAVL(pAVL a)
     return a;
 }
 
-/* Inutile 
-//Partie supression
-
-pAVL sup_min(pAVL a, pAVL *minNode, int *h)
-{
-    if (!a) { *minNode = NULL; *h = 0; return NULL; }
-
-    if (a->fg == NULL) {
-        *minNode = a;
-        *h = 1;
-        return a->fd;
-    }
-
-    a->fg = sup_min(a->fg, minNode, h);
-
-    if (*h) {
-        a->equi += 1;
-        if (a->equi >= 2 || a->equi <= -2) a = equilibreAVL(a);
-    }
-    return a;
-}
-
-pAVL suppression_AVL(pAVL a, const char *key, int *h)
-{
-    if (!a) { *h = 0; return NULL; }
-
-    int cmp = strcmp(key, a->ID);
-
-    if (cmp < 0) {
-        a->fg = suppression_AVL(a->fg, key, h);
-        if (*h) { a->equi += 1; if (a->equi >= 2 || a->equi <= -2) a = equilibreAVL(a); }
-        return a;
-    }
-    if (cmp > 0) {
-        a->fd = suppression_AVL(a->fd, key, h);
-        if (*h) { a->equi -= 1; if (a->equi >= 2 || a->equi <= -2) a = equilibreAVL(a); }
-        return a;
-    }
-
-    // cmp == 0 
-    pAVL toFree = a;
-
-    if (a->fg == NULL) {
-        a = a->fd;
-        free(toFree->ID); free(toFree);
-        *h = 1;
-        return a;
-    }
-    if (a->fd == NULL) {
-        a = a->fg;
-        free(toFree->ID); free(toFree);
-        *h = 1;
-        return a;
-    }
-
-    pAVL minNode = NULL;
-    int h2 = 0;
-    a->fd = sup_min(a->fd, &minNode, &h2);
-
-    free(a->ID);
-    a->ID = strdup(minNode->ID);
-    a->Capacity_Max     = minNode->Capacity_Max;
-    a->Total_Source_Vol = minNode->Total_Source_Vol;
-    a->Total_Real_Vol   = minNode->Total_Real_Vol;
-
-    free(minNode->ID);
-    free(minNode);
-
-    if (h2) {
-        a->equi -= 1;
-        if (a->equi >= 2 || a->equi <= -2) a = equilibreAVL(a);
-        *h = 1;
-    } else {
-        *h = 0;
-    }
-    return a;
-}
-*/
-
 //Debug 
 
 void traiter(pAVL a, FILE * returnfile, HistoMode mode)
@@ -290,13 +212,33 @@ void parcoursprefixe(pAVL racine, FILE * returnfile, HistoMode mode)
 }
 
 
-void suppressionAVL(pAVL a)
+void freeAVL(pAVL a)
 {
-    if(a)
-    {
-        suppressionAVL(a->fg);
-        suppressionAVL(a->fd);
-        free(a->ID);
-        free(a);
+    if (!a) return;
+
+    freeAVL(a->fg);
+    freeAVL(a->fd);
+
+    if (a->key == AVL_HISTO) {
+        if (a->data.HistoPart) {
+            free(a->data.HistoPart->ID);
+            free(a->data.HistoPart);
+            a->data.HistoPart = NULL;
+        }
+    } else if (a->key == AVL_LEAKS) {
+        if (a->data.LeaksPart) {
+            if (a->data.LeaksPart->ac) {
+                free(a->data.LeaksPart->ac);
+                a->data.LeaksPart->ac = NULL;
+            }
+            free(a->data.LeaksPart->ID);
+            free(a->data.LeaksPart);
+            a->data.LeaksPart = NULL;
+        }
     }
+
+    free(a->ID);
+
+    free(a);
 }
+
