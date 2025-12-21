@@ -38,3 +38,8 @@ $(EXEC): $(OBJS)
 clean:
 	rm -rf $(BUILD_DIR) $(EXEC) $(EXEC).exe
 	rm -f *.txt
+	rm -f *.png
+	rm -f returnleaks.dat
+
+cleanexec:
+	rm -rf $(BUILD_DIR) $(EXEC) $(EXEC).exe

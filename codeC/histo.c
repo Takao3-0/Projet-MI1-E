@@ -31,22 +31,59 @@ Cahier des charges
 */
 
 
+void Max(FILE * Usine) //max
+{
+    char line[128];
+    int h = 0;
+    char IDUsine[128];
+    double Vol;
+    
+
+    pAVL AVL_MAX = NULL;
+    if (Usine)
+    {
+        while(fgets(line,sizeof(line), Usine))
+        {
+            if (sscanf(line, "%[^;];%lf", IDUsine, &Vol) != 2) continue;
+            pAVL elmt = recherche(AVL_MAX, IDUsine);
+            if (!elmt)
+            {
+                h = 0;
+                AVL_MAX = insertionAVL(AVL_MAX,IDUsine, &h ,AVL_HISTO);
+                elmt = recherche(AVL_MAX,IDUsine);
+            }
+            elmt->data.HistoPart->Capacity_Max = Vol;
+        }
+    }
+    else printf("Le fichier reçu est vide\n");
+
+    FILE *returnMAX = fopen("returnmax.txt", "w");
+    if (returnMAX) {
+        parcoursInfixe(AVL_MAX, returnMAX, MAX);
+        fclose(returnMAX);
+    } else {
+        printf("returnMAX n'existe pas!\n");
+    }
+    freeAVL(AVL_MAX);
+    AVL_MAX = NULL;
+}
+
+
 void VolumeCapte(FILE * filesource) //src
 {
     char line[128]; 
-    int h;
+    int h = 0;
     char IDUsine[128];
     char IDSource[128];
-    int volumeSource;
-    pAVL elmt;
+    double volumeSource;
     pAVL AVL_VC = NULL;
     if(filesource)
     {
         //printf(VERT"On fait la partie src\n"RESET);
         while (fgets(line, sizeof(line), filesource))
         {
-            if (sscanf(line, "%[^;];%[^;];%d", IDSource, IDUsine, &volumeSource) != 3) continue;
-            elmt = recherche(AVL_VC, IDUsine);
+            if (sscanf(line, "%[^;];%[^;];%lf", IDSource, IDUsine, &volumeSource) != 3) continue;
+            pAVL elmt = recherche(AVL_VC, IDUsine);
             if (!elmt)
             {
                 //printf(VIOLET"L'usine %s n'est pas dans l'AVL, on l'ajoute\n"RESET,IDUsine);
@@ -65,12 +102,15 @@ void VolumeCapte(FILE * filesource) //src
     
     /*On cree le fichier return*/
 
-    FILE * returnSRC = fopen("returnsrc.txt", "w");
-    if (returnSRC) parcoursprefixe(AVL_VC, returnSRC,SRC);        
-    else printf(ROUGE"returnSRC n'existe pas!\n"RESET);
+    FILE *returnSRC = fopen("returnsrc.txt", "w");
+    if (returnSRC) {
+        parcoursInfixe(AVL_VC, returnSRC, SRC);
+        fclose(returnSRC);
+    } else {
+        printf("returnSRC n'existe pas!\n");
+    }
     freeAVL(AVL_VC);
-    AVL_VC = NULL; 
-    fclose(returnSRC); 
+    AVL_VC = NULL;
 }
 
 void VolumeTraite(FILE * filesourceL) //real
@@ -108,14 +148,54 @@ void VolumeTraite(FILE * filesourceL) //real
 
     //On cree le fichier return
     FILE * returnREAL = fopen("returnreal.txt", "w");
-    if (returnREAL) ;
+    if (returnREAL) parcoursInfixe(AVL_VT, returnREAL,REAL);
     else printf(ROUGE"returnREAL n'existe pas!\n"RESET);
 
-    parcoursprefixe(AVL_VT, returnREAL,REAL);  
     freeAVL(AVL_VT);
     AVL_VT = NULL; 
     fclose(returnREAL); 
 }
 
+
+
+
+
+
+void HistoALL()
+{
+    char line[128], dassault[128], line2[128];
+    char id1[128], id2[128], id3[128];
+    double vsrc, vreal, vmax;
+
+    FILE * src = fopen("returnsrc.txt", "r");
+    FILEOPEN(src, "returnsrc.txt");
+
+    FILE * real = fopen("returnreal.txt", "r");   
+    FILEOPEN(real, "returnreal.txt");
+
+    FILE * max = fopen("returnmax.txt", "r");   
+    FILEOPEN(max, "returnmax.txt");
+
+    FILE * returnall = fopen("returnall.txt", "w");
+    FILEOPEN(returnall, "returnall.txt");    
+    
+    while(fgets(line, sizeof(line),src) && fgets(dassault, sizeof (dassault), real) && fgets(line2, sizeof (line2), max))
+    {
+        if (sscanf(line,  "%[^;];%lf", id1, &vsrc)  != 2) continue;
+        if (sscanf(dassault, "%[^;];%lf", id2, &vreal) != 2) continue;
+        if (sscanf(line2,  "%[^;];%lf", id3, &vmax)  != 2) continue;
+        
+        if ((strcmp(id1,id2) == 0) && (strcmp(id2, id3) == 0))
+        {
+            fprintf(returnall,"%s;%lf;%lf;%lf\n",id1,vmax,vsrc,vreal);
+        }
+        else continue;
+    }
+
+    fclose(src);
+    fclose(real);
+    fclose(max);
+    fclose(returnall);
+}
 
 

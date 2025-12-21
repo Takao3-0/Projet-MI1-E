@@ -5,6 +5,9 @@
 
 void VolumeCapte(FILE *fileSource);
 void VolumeTraite(FILE * filesourceL); //real
+void Max(FILE * Usine); //max
+
+void HistoALL();
 
 #endif
 

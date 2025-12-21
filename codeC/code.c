@@ -6,6 +6,7 @@
 int main(int argc, char *argv[]) 
 {
 /*On utilise ce qui est passe en parametre argv pour identifier la commande*/
+    puts(ROUGE"Debut d'execution du C"RESET);
     if (strcmp(argv[2], "histo") == 0)
     {
         if(argc < 3)
@@ -15,29 +16,51 @@ int main(int argc, char *argv[])
         }
         else
         {
-            printf("Commande histo entrée!\n");
             if (strcmp(argv[3], "src") == 0)
             {
+                puts(VIOLET"Commande histo SRC entrée!"RESET);
                 FILE *fSource = fopen(argv[4], "r");
-                if (!fSource)
-                {
-                    fclose(fSource); 
-                    return 2;                   
-                }
+                FILEOPEN(fSource, argv[4]);
                 VolumeCapte(fSource);
                 fclose(fSource);
             }
             else if (strcmp(argv[3], "real") == 0)
             {
+                puts(VIOLET"Commande histo REAL entrée!"RESET);
                 FILE * fSourceL = fopen(argv[4], "r");
-                if (!fSourceL)
-                {
-                    fclose(fSourceL); 
-                    return 2;                   
-                }
+                FILEOPEN(fSourceL, argv[4]);
+
                 VolumeTraite(fSourceL);
                 fclose(fSourceL);                
             }
+            else if (strcmp(argv[3], "max") == 0)
+            {
+                puts(VIOLET"Commande histo MAX entrée!"RESET);
+                FILE * Usine = fopen(argv[4], "r");
+                FILEOPEN(Usine, argv[4]);
+
+                Max(Usine);
+                fclose(Usine);                    
+
+            }
+            else if (strcmp(argv[3], "all") == 0)
+            {
+                puts(VIOLET"Commande histo ALL entrée!"RESET);    
+                FILE * Usine = fopen(argv[4], "r");
+                FILEOPEN(Usine, argv[4]);
+                FILE * fSourceL = fopen(argv[5], "r");
+                FILEOPEN(fSourceL, argv[5]);
+                FILE * fSource = fopen(argv[6], "r");
+                FILEOPEN(fSource, argv[6]);
+                Max(Usine);
+                VolumeCapte(fSource);
+                VolumeTraite(fSourceL);
+                fclose(fSourceL);  
+                fclose(Usine); 
+                fclose(fSource); 
+                HistoALL(); 
+
+            }     
         }   
     }
     else if (strcmp(argv[2], "leaks") == 0)
@@ -56,13 +79,11 @@ int main(int argc, char *argv[])
         FILE * fEnfant = fopen(argv[4], "r");
         if (!fEnfant)
         {
-            fclose(fEnfant); 
             return 2;                   
         }
         FILE * fSourceL = fopen(argv[5], "r");
         if (!fSourceL)
         {
-            fclose(fSourceL); 
             return 2;                   
         }
         leaks(argv[3],fSourceL, fEnfant);
@@ -74,5 +95,6 @@ int main(int argc, char *argv[])
         printf(ROUGE"Commande non reconnu!\n"RESET);
         return 1;
     }
+    puts(ROUGE"Fin d'execution du C"RESET);
     return 0;
 }

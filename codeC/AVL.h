@@ -87,7 +87,7 @@ pAVL rotation_double_droite(pAVL a);
 
 /*Parcour*/
 
-void parcoursprefixe(pAVL racine, FILE * returnfile, HistoMode mode);
+void parcoursInfixe(pAVL racine, FILE * returnfile, HistoMode mode);
 
 void freeAVL(pAVL a);
 

@@ -223,7 +223,7 @@ void free_leaks_all(pAC reseau, pAVL indexInfo)
 
 int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
 {
-    int rturn = 0;
+    //int rturn = 0;
     if (!IDUsine || !fSourceL || !fEnfant) return 2;
 
     char line[128];
@@ -246,7 +246,7 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
         if (strcmp(ID, IDUsine) == 0) usine_true = true;
     }
     fclose(VT);
-    printf("%s\n", usine_true ? VERT"L'usine existe"RESET : ROUGE"L'usine n'existe pas"RESET);
+    //printf("%s\n", usine_true ? VERT"L'usine existe"RESET : ROUGE"L'usine n'existe pas"RESET);
     if (!usine_true)
     {
         FILE *returnleaks = fopen("returnleaks.dat", "w");
@@ -334,7 +334,7 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
 
     printf("Le tronçon qui pert le plus est : %s -> %s avec un volume de %lf perdu!\n",TPM->node->ID,TPM->enfant->node->ID,perteMax);
 
-    //debug_arbre_leaks(Reseau);
+    debug_arbre_leaks(Reseau);
     //rturn
     FILE *returnleaks = fopen("returnleaks.dat", "w");
     if (returnleaks) {

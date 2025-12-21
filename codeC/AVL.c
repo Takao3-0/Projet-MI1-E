@@ -197,17 +197,17 @@ void traiter(pAVL a, FILE * returnfile, HistoMode mode)
     
     //printf(BLEU"Identifiant de l'usine : "ROUGE"%s\n"RESET, a->ID);
     //printf(VERT"Volume recu de l'usine :%lf\n"RESET, (mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
-    fprintf(returnfile,"%s;%lf\n",a->ID,(mode == SRC) ? a->data.HistoPart->Total_Source_Vol : a->data.HistoPart->Total_Real_Vol);
+    fprintf(returnfile,"%s;%lf\n",a->ID,(mode == SRC) ? a->data.HistoPart->Total_Source_Vol / 1000 : (mode == REAL) ? a->data.HistoPart->Total_Real_Vol / 1000 : a->data.HistoPart->Capacity_Max / 1000);
 }
 
-void parcoursprefixe(pAVL racine, FILE * returnfile, HistoMode mode)
+void parcoursInfixe(pAVL racine, FILE * returnfile, HistoMode mode)
 {
     pAVL a = racine;
     if(a)
     {
+        parcoursInfixe(a->fg, returnfile,mode);
         traiter(a, returnfile,mode);
-        parcoursprefixe(a->fg, returnfile,mode);
-        parcoursprefixe(a->fd, returnfile,mode);        
+        parcoursInfixe(a->fd, returnfile,mode);        
     }
 }
 
