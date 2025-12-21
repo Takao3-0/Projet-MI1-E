@@ -3,11 +3,11 @@
 #include "head.h"
 #include "AVL.h"
 
-void VolumeCapte(FILE *fileSource);
-void VolumeTraite(FILE * filesourceL); //real
-void Max(FILE * Usine); //max
+int VolumeCapte(FILE *fileSource);
+int VolumeTraite(FILE * filesourceL); //real
+int Max(FILE * Usine); //max
 
-void HistoALL();
+int HistoALL();
 
 #endif
 

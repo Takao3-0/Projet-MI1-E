@@ -7,63 +7,49 @@ Le programme permet de traiter différents modes d’analyse (historique, source
 ⚙️ Fonctionnalités principales
 🔹 histo
 
-Analyse des capacités et volumes (max, src, real)
-
-Utilise un AVL indexé par identifiant
-
-Sortie optimisée pour grands fichiers
+    Analyse des capacités et volumes (max, src, real)
+    Utilise un AVL indexé par identifiant
+    Sortie optimisée pour grands fichiers
 
 🔹 src
 
-Calcul des volumes issus des sources
-
-Agrégation rapide via AVL
+    Calcul des volumes issus des sources
+    Agrégation rapide via AVL
 
 🔹 real
 
-Traitement des volumes réellement distribués
-
-Génère un fichier intermédiaire returnreal.txt
+    Traitement des volumes réellement distribués
+    Génère un fichier intermédiaire returnreal.txt
 
 🔹 leaks (avec bonus)
 
-Construction complète du réseau hydraulique de l’usine
-
-Détection du tronçon qui perd le plus d’eau
-
-Navigation interactive dans le réseau via un mode debug
+    Construction complète du réseau hydraulique de l’usine
+    Détection du tronçon qui perd le plus d’eau
+    Navigation interactive dans le réseau via un mode debug
 
 Architecture :
 
-AVL = index rapide (ID → données)
-
-Arbre classique (enfant / frère) = topologie du réseau
+    AVL = index rapide (ID → données)
+    Arbre classique (enfant / frère) = topologie du réseau
 
 🧠 Architecture des données
 
-AVL
+    AVL
+    Indexation par identifiant
+    Union pour gérer :
 
-Indexation par identifiant
+        NodeH (historique)
+        NodeL (fuites)
 
-Union pour gérer :
+    Arbre classique (AC)
 
-NodeH (historique)
+        Représentation du réseau
+        Chaque nœud pointe vers ses données via NodeL
 
-NodeL (fuites)
-
-Arbre classique (AC)
-
-Représentation du réseau
-
-Chaque nœud pointe vers ses données via NodeL
-
-Cette séparation permet :
-
-des recherches rapides (O(log n))
-
-une topologie simple et lisible
-
-aucune duplication inutile des données
+            Cette séparation permet :
+                des recherches rapides (O(log n))
+                une topologie simple et lisible
+                aucune duplication inutile des données
 
 🧪 Mode Debug (leaks)
 
@@ -77,18 +63,21 @@ root     revenir à la racine
 path     afficher le chemin courant
 q        quitter
 
+
 🛠️ Compilation
 ✅ Prérequis
 
-GNU Make
+    Make
+    GCC (Linux / MinGW sous Windows)
+    Valgrind pour verifier les pertes de données
 
-GCC (Linux / MinGW sous Windows)
 
 ▶️ Compiler
-make
+    make
 
 🧹 Nettoyer
-make clean
+    make clean
+    make cleanexec (pour clear les ficher .o)
 
 
 Le Makefile est pour Linux (fonctionne très bien sur mon VPS avec Ubuntu)
@@ -102,10 +91,11 @@ Exemple :
 
 Les scripts .sh fournis facilitent l’exécution selon le mode :
 
-src.sh
-real.sh
-leaks.sh
-max.sh
+    Bonusall.sh
+    src.sh
+    real.sh
+    leaks.sh
+    max.sh
 
 📁 Organisation du projet
 .

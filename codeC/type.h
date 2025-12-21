@@ -18,13 +18,20 @@ typedef enum { AVL_HISTO, AVL_LEAKS } AVLKey;
         } \
     } while(0)
 
+#define SUCCES 0   
+#define ERREUR_ARG 1
+#define ERREUR_FOPEN 2
+#define ERREUR_MALLOC 3
+#define ERREUR_USINEIN_CONNU 4
+#define ERREUR_NULL 5
+
 
 #define FILEOPEN(f, filename) \
     do \
     { \
         if (!(f)) \
         { \
-            exit(1); \
+            exit(ERREUR_FOPEN); \
         } \
     } while (0)
 

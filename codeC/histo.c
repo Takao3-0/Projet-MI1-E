@@ -31,7 +31,7 @@ Cahier des charges
 */
 
 
-void Max(FILE * Usine) //max
+int Max(FILE * Usine) //max
 {
     char line[128];
     int h = 0;
@@ -55,7 +55,11 @@ void Max(FILE * Usine) //max
             elmt->data.HistoPart->Capacity_Max = Vol;
         }
     }
-    else printf("Le fichier reçu est vide\n");
+    else 
+    {
+        printf("Le fichier reçu est vide\n");
+        return ERREUR_NULL;
+    }
 
     FILE *returnMAX = fopen("returnmax.txt", "w");
     if (returnMAX) {
@@ -63,13 +67,15 @@ void Max(FILE * Usine) //max
         fclose(returnMAX);
     } else {
         printf("returnMAX n'existe pas!\n");
+        return ERREUR_FOPEN;
     }
     freeAVL(AVL_MAX);
     AVL_MAX = NULL;
+    return SUCCES;
 }
 
 
-void VolumeCapte(FILE * filesource) //src
+int VolumeCapte(FILE * filesource) //src
 {
     char line[128]; 
     int h = 0;
@@ -98,6 +104,7 @@ void VolumeCapte(FILE * filesource) //src
     else 
     {
         printf("Le fichier reçu est vide!\n");
+        return ERREUR_NULL;
     }
     
     /*On cree le fichier return*/
@@ -108,12 +115,14 @@ void VolumeCapte(FILE * filesource) //src
         fclose(returnSRC);
     } else {
         printf("returnSRC n'existe pas!\n");
+        return ERREUR_FOPEN;
     }
     freeAVL(AVL_VC);
     AVL_VC = NULL;
+    return SUCCES;
 }
 
-void VolumeTraite(FILE * filesourceL) //real
+int VolumeTraite(FILE * filesourceL) //real
 {
     char line[128]; 
     int h;
@@ -144,6 +153,7 @@ void VolumeTraite(FILE * filesourceL) //real
     else 
     {
         printf("Le fichier reçu est vide!\n");
+        return ERREUR_NULL;
     }    
 
     //On cree le fichier return
@@ -154,6 +164,7 @@ void VolumeTraite(FILE * filesourceL) //real
     freeAVL(AVL_VT);
     AVL_VT = NULL; 
     fclose(returnREAL); 
+    return SUCCES;
 }
 
 
@@ -161,7 +172,7 @@ void VolumeTraite(FILE * filesourceL) //real
 
 
 
-void HistoALL()
+int HistoALL()
 {
     char line[128], dassault[128], line2[128];
     char id1[128], id2[128], id3[128];
@@ -196,6 +207,7 @@ void HistoALL()
     fclose(real);
     fclose(max);
     fclose(returnall);
+    return SUCCES;
 }
 
 

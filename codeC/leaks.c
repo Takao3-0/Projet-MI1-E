@@ -221,11 +221,11 @@ void free_leaks_all(pAC reseau, pAVL indexInfo)
     if (indexInfo) freeAVL(indexInfo); // libère NodeL/ID + AVL*
 }
 
+
 int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
 {
     //int rturn = 0;
-    if (!IDUsine || !fSourceL || !fEnfant) return 2;
-
+    if (!IDUsine || !fSourceL || !fEnfant) return ERREUR_NULL;
     char line[128];
     char ID[128];
     double volume;
@@ -239,7 +239,7 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
     VolumeTraite(fSourceL);
 
     FILE *VT = fopen("returnreal.txt", "r");
-    if (!VT) return 3;
+    if (!VT) return ERREUR_FOPEN;
 
     while (fgets(line, sizeof(line), VT) && !usine_true) {
         if (sscanf(line, "%127[^;];%lf", ID, &volume) != 2) continue;
@@ -252,26 +252,26 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
         FILE *returnleaks = fopen("returnleaks.dat", "w");
         if (returnleaks) 
         {
-            fprintf(returnleaks,"-1");
+            fprintf(returnleaks,"%s;-1",IDUsine);
             fclose(returnleaks);
         }
-        return -1;
+        return ERREUR_USINEIN_CONNU;
     }
 
     // Index infos : ID -> NodeL* (NodeL contient aussi ac) 
     pAVL IndexInfo = creerAVL(IDUsine, AVL_LEAKS);
-    if (!IndexInfo) return 7;
+    if (!IndexInfo) return ERREUR_MALLOC;
 
     // Racine topo = ac de l'usine
     pNodeL infoRoot = IndexInfo->data.LeaksPart;      // déjà cree par creerAVL
-    if (!infoRoot) return 7;
+    if (!infoRoot) return ERREUR_MALLOC;
     else infoRoot->volume_recu = volume;
     //printf("Volume partant de l'usine : %lf\n",infoRoot->volume_recu);
 
     if (!infoRoot->ac) 
     {
         infoRoot->ac = creerAC(infoRoot);
-        if (!infoRoot->ac) return 7;
+        if (!infoRoot->ac) return ERREUR_MALLOC;
     }
     pAC Reseau = infoRoot->ac; //Notre reseau final avec comme racine l'usine
 
@@ -283,15 +283,15 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
         char poubelle[128];
         if(sscanf(line, "%127[^;];%127[^;];%127[^;];%127[^;];%f",poubelle,ActualID, Next, tiret, &leakVal) != 5) continue;
 
-        if (strcmp(tiret, "-") != 0) return 4;
-        if (leakVal < 0.0f) return 4;
+        if (strcmp(tiret, "-") != 0) return ERREUR_ARG;
+        if (leakVal < 0.0f) return ERREUR_ARG;
 
         pAVL avlP = recherche(IndexInfo, ActualID);
         if (!avlP) {
             h = 0;
             IndexInfo = insertionAVL(IndexInfo, ActualID, &h, AVL_LEAKS);
             avlP = recherche(IndexInfo, ActualID);
-            if (!avlP) return 5;
+            if (!avlP) return ERREUR_NULL;
         }
 
         pAVL avlC = recherche(IndexInfo, Next);
@@ -299,12 +299,12 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
             h = 0;
             IndexInfo = insertionAVL(IndexInfo, Next, &h, AVL_LEAKS);
             avlC = recherche(IndexInfo, Next);
-            if (!avlC) return 5;
+            if (!avlC) return ERREUR_NULL;
         }
 
         pNodeL infoParent = avlP->data.LeaksPart;
         pNodeL infoChild  = avlC->data.LeaksPart;
-        if (!infoParent || !infoChild) return 7;
+        if (!infoParent || !infoChild) return ERREUR_NULL;
 
         // fuite sur l'enfant
         infoChild->leak = leakVal;
@@ -313,13 +313,13 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
             if (strcmp(infoParent->ID, IDUsine) == 0) infoParent->ac = Reseau;
             else {
                 infoParent->ac = creerAC(infoParent);
-                if (!infoParent->ac) return 7;
+                if (!infoParent->ac) return ERREUR_NULL;
             }
         }
 
         if (!infoChild->ac) {
             infoChild->ac = creerAC(infoChild);
-            if (!infoChild->ac) return 7;
+            if (!infoChild->ac) return ERREUR_NULL;
         }
         InsertionAC(infoParent->ac, infoChild->ac);
     }
@@ -337,15 +337,15 @@ int leaks(char *IDUsine, FILE *fSourceL, FILE *fEnfant)
     debug_arbre_leaks(Reseau);
     //rturn
     FILE *returnleaks = fopen("returnleaks.dat", "w");
-    if (returnleaks) {
-;
+    if (returnleaks) 
+    {
         fprintf(returnleaks, "%s;%lf\n", IDUsine,perte/1000); //On divise par 1000 pour avoir des millions de m^3
         fprintf(returnleaks,"Le tronçon qui pert le plus est : %s -> %s avec un volume de %lf perdu!\n",TPM->node->ID,TPM->enfant->node->ID,perteMax);
         fclose(returnleaks);
     }
     free_leaks_all(Reseau, IndexInfo);
     IndexInfo = NULL;
-    return 0;
+    return SUCCES;
 }
 
 

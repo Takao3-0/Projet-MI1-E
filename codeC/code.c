@@ -3,8 +3,10 @@
 #include "leaks.h"
 #include "type.h"
 
+
 int main(int argc, char *argv[]) 
 {
+    int rturn = 0;
 /*On utilise ce qui est passe en parametre argv pour identifier la commande*/
     puts(ROUGE"Debut d'execution du C"RESET);
     if (strcmp(argv[2], "histo") == 0)
@@ -12,7 +14,7 @@ int main(int argc, char *argv[])
         if(argc < 3)
         {
             printf("Il n'y a pas d'instruction pour histo");
-            return 3;
+            return ERREUR_ARG;
         }
         else
         {
@@ -21,7 +23,7 @@ int main(int argc, char *argv[])
                 puts(VIOLET"Commande histo SRC entrée!"RESET);
                 FILE *fSource = fopen(argv[4], "r");
                 FILEOPEN(fSource, argv[4]);
-                VolumeCapte(fSource);
+                rturn = VolumeCapte(fSource);
                 fclose(fSource);
             }
             else if (strcmp(argv[3], "real") == 0)
@@ -30,7 +32,7 @@ int main(int argc, char *argv[])
                 FILE * fSourceL = fopen(argv[4], "r");
                 FILEOPEN(fSourceL, argv[4]);
 
-                VolumeTraite(fSourceL);
+                rturn = VolumeTraite(fSourceL);
                 fclose(fSourceL);                
             }
             else if (strcmp(argv[3], "max") == 0)
@@ -39,7 +41,7 @@ int main(int argc, char *argv[])
                 FILE * Usine = fopen(argv[4], "r");
                 FILEOPEN(Usine, argv[4]);
 
-                Max(Usine);
+                rturn = Max(Usine);
                 fclose(Usine);                    
 
             }
@@ -52,13 +54,28 @@ int main(int argc, char *argv[])
                 FILEOPEN(fSourceL, argv[5]);
                 FILE * fSource = fopen(argv[6], "r");
                 FILEOPEN(fSource, argv[6]);
-                Max(Usine);
-                VolumeCapte(fSource);
-                VolumeTraite(fSourceL);
+                rturn = Max(Usine);
+                if (rturn != 0)
+                {
+                    puts(ROUGE"Fin d'execution du C"RESET);
+                    return rturn;
+                }
+                rturn = VolumeCapte(fSource);
+                if (rturn != 0)
+                {
+                    puts(ROUGE"Fin d'execution du C"RESET);
+                    return rturn;
+                }
+                rturn = VolumeTraite(fSourceL);
+                if (rturn != 0)
+                {
+                    puts(ROUGE"Fin d'execution du C"RESET);
+                    return rturn;
+                }
                 fclose(fSourceL);  
                 fclose(Usine); 
                 fclose(fSource); 
-                HistoALL(); 
+                rturn = HistoALL(); 
 
             }     
         }   
@@ -68,7 +85,7 @@ int main(int argc, char *argv[])
         if (argc < 3)
         {
             printf(ROUGE"Il n'y a pas assez d'argement pour leaks\n");
-            return 3;
+            return ERREUR_ARG;
         }
         else printf(BLEU"Fonction leaks\n"RESET);
         /*
@@ -79,22 +96,23 @@ int main(int argc, char *argv[])
         FILE * fEnfant = fopen(argv[4], "r");
         if (!fEnfant)
         {
-            return 2;                   
+            return ERREUR_FOPEN;                   
         }
         FILE * fSourceL = fopen(argv[5], "r");
         if (!fSourceL)
         {
-            return 2;                   
+            return ERREUR_FOPEN;                   
         }
-        leaks(argv[3],fSourceL, fEnfant);
+        rturn = leaks(argv[3],fSourceL, fEnfant);
         fclose(fSourceL);
         fclose(fEnfant);
     }
     else 
     {
         printf(ROUGE"Commande non reconnu!\n"RESET);
-        return 1;
+        return ERREUR_ARG;
     }
     puts(ROUGE"Fin d'execution du C"RESET);
-    return 0;
+    printf(VERT"%d\n"RESET, rturn);
+    return rturn;
 }

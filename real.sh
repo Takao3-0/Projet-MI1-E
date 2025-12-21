@@ -21,16 +21,27 @@ if [ ! -f "$EXECUTABLE" ]; then
     fi
     echo "Compilation réussie."
 fi
-#VAL1=$(date +%s%3N)
-#valgrind --leak-check=full --show-leak-kinds=all "${CMD[@]}"
-#VAL2=$(date +%s%3N)
-#echo "Execution du C avec verification des fuites avec Valgrind: $((VAL2 - VAL1)) ms"
-CURRENT1=$(date +%s%3N)
-./wildwater "$1" histo real SourceL.txt
-CURRENT2=$(date +%s%3N)
-
-echo "Durée d'execution du C: $((CURRENT2 - CURRENT1)) ms"
+VAL1=$(date +%s%3N)
+valgrind --leak-check=full --show-leak-kinds=all "${CMD[@]}"
 CODE_RETOUR=$?
+#./wildwater "$1" histo real SourceL.txt
+VAL2=$(date +%s%3N)
+echo "Execution du C avec verification des fuites avec Valgrind: $((VAL2 - VAL1)) ms"
+
+
+if [ "$CODE_RETOUR" -eq 0 ]; then
+    echo "Tout s'est bien passé."
+elif [ "$CODE_RETOUR" -eq 1 ];then 
+	echo "Erreur d'arguments : le fichier envoyer par le shell n'est pas bon"
+elif [ "$CODE_RETOUR" -eq 2 ];then
+	echo "Erreur dans l'ouverture d'un fichier"
+elif [ "$CODE_RETOUR" -eq 3 ];then 
+	echo "Erreur d'allocation dynamique"
+elif [ "$CODE_RETOUR" -eq 4 ];then
+	echo "Usine pas reconnue"
+elif [ "$CODE_RETOUR" -eq 5 ];then
+	echo "Erreur dans la valeur d'une variable, celle ci est egal a NULL"
+fi 
 
 if [ $CODE_RETOUR -eq 0 ]; then
     echo "Le programme s'est exécuté correctement."
@@ -39,6 +50,7 @@ else
     echo "Le programme a échoué avec le code retour $CODE_RETOUR."
     exit $CODE_RETOUR
 fi
+
 
 sort -t';' -k2,2g "$OUT" > real_sorted.tmp
 
