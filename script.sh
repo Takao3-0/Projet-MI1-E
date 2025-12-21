@@ -7,6 +7,8 @@ elif [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "src" ] && [ ! $4 ]; then
 bash src.sh $1
 elif [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "real" ] && [ ! $4 ]; then
 bash real.sh $1
+elif [ -f $1 ] && [ "$2" = "histo" ] && [ "$3" = "all" ] && [ ! $4 ]; then
+bash all.sh $1
 elif [ -f $1 ] && [ "$2" = "leaks" ] && [ -n "$3" ] && [ ! $4 ];then
 bash leaks.sh $1 "$3"
 else
