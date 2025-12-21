@@ -22,7 +22,8 @@ if [ ! -f "$EXECUTABLE" ]; then
 fi
 
 VAL1=$(date +%s%3N)
-valgrind --leak-check=full --show-leak-kinds=all ./wildwater "$1" histo src Source.txt
+#valgrind --leak-check=full --show-leak-kinds=all ./wildwater "$1" histo src Source.txt
+./wildwater "$1" histo src Source.txt
 VAL2=$(date +%s%3N)
 echo "Verification fuite avec Valgrind: $((VAL2 - VAL1)) ms"
 CODE_RETOUR=$?

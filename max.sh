@@ -7,10 +7,10 @@ OUT="returnmax.txt"
 
 LC_ALL=C awk -F ';' '$1=="-" && $2!="-" && $3=="-" && $4!="-" && $5=="-" {print $2 ";" $4}' $1 > Usine.txt
 
-VAL1=$(date +%s%3N)
-valgrind --leak-check=full --show-leak-kinds=all 
-VAL2=$(date +%s%3N)
-echo "Verification fuite avec Valgrind: $((VAL2 - VAL1)) ms"
+#VAL1=$(date +%s%3N)
+#valgrind --leak-check=full --show-leak-kinds=all 
+#VAL2=$(date +%s%3N)
+#echo "Verification fuite avec Valgrind: $((VAL2 - VAL1)) ms"
 
 echo "Début d'execution du C:"
 CURRENT1=$(date +%s%3N)

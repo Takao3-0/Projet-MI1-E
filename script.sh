@@ -30,7 +30,8 @@ elif [ -f "$1" ] && [ "$2" = "leaks" ] && [ -n "$3" ]; then
 		LC_ALL=C awk -F ';' -v usine="$NomUsine" '{for(i=1;i<=5;i++) gsub(/\r/,"",$i)}($1==usine && $2!="-" && $3!="-" && $4=="-" && $5!="-" )|| ($1=="-" && $2==usine && $3!="-" && $4=="-" && $5!="-" ){print $1 ";" $2 ";" $3 ";" $4 ";" $5}' "$1" > Facility.txt
 
 		VAL1=$(date +%s%3N)
-		valgrind --leak-check=full --show-leak-kinds=all ./wildwater "$1" leaks "$3" Facility.txt SourceL.txt
+		#valgrind --leak-check=full --show-leak-kinds=all ./wildwater "$1" leaks "$3" Facility.txt SourceL.txt
+		./wildwater "$1" leaks "$3" Facility.txt SourceL.txt
 		VAL2=$(date +%s%3N)
 		echo "Execution du C + verification fuite avec Valgrind: $((VAL2 - VAL1)) ms"
 

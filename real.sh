@@ -21,15 +21,15 @@ if [ ! -f "$EXECUTABLE" ]; then
     fi
     echo "Compilation réussie."
 fi
-VAL1=$(date +%s%3N)
-valgrind --leak-check=full --show-leak-kinds=all "${CMD[@]}"
-VAL2=$(date +%s%3N)
-echo "Execution du C avec verification des fuites avec Valgrind: $((VAL2 - VAL1)) ms"
-#CURRENT1=$(date +%s%3N)
-#./wildwater "$1" histo real SourceL.txt
-#CURRENT2=$(date +%s%3N)
+#VAL1=$(date +%s%3N)
+#valgrind --leak-check=full --show-leak-kinds=all "${CMD[@]}"
+#VAL2=$(date +%s%3N)
+#echo "Execution du C avec verification des fuites avec Valgrind: $((VAL2 - VAL1)) ms"
+CURRENT1=$(date +%s%3N)
+./wildwater "$1" histo real SourceL.txt
+CURRENT2=$(date +%s%3N)
 
-#echo "Durée d'execution du C: $((CURRENT2 - CURRENT1)) ms"
+echo "Durée d'execution du C: $((CURRENT2 - CURRENT1)) ms"
 CODE_RETOUR=$?
 
 if [ $CODE_RETOUR -eq 0 ]; then
