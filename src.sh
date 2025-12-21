@@ -36,16 +36,19 @@ gnuplot << EOF
 set datafile separator ";"
 set terminal pngcairo size 1920,1080
 set title "histosrc"
-set ylabel "k.m^3.year^{-1}"
+set xlabel "Usines"
+set ylabel "Volumes (M.m3/an)"
 set style data histograms
+set key outside
+set grid ytics
 set style fill solid 1.0 border -1
 set xtics rotate by 60 right
 
 set output "histogram_src50.png"
-plot "< head -n 50 srctrie.txt" using 2:xtic(1) title "Donnees"
+plot "< head -n 50 srctrie.txt" using 2:xtic(1) title "Volume"
 
 set output "histogram_src10.png"
-plot "< tail -n 10 srctrie.txt" using 2:xtic(1) title "Donnees"
+plot "< tail -n 10 srctrie.txt" using 2:xtic(1) title "Volume"
 EOF
 
 echo "Histogrammes générés : histogram_src10.png et histogram_src50.png"
