@@ -1,16 +1,128 @@
-/*
+WildWater – Projet MI1E
+📌 Présentation
 
-Les return 
+WildWater est un projet en C visant à analyser un réseau de distribution d’eau à partir de fichiers CSV volumineux.
+Le programme permet de traiter différents modes d’analyse (historique, sources, fuites) en s’appuyant sur des structures de données efficaces (AVL + arbre classique).
 
-    return 0 -> Pas d'erreur
-    return 1 -> Commande inconnue 
-    return 2 -> Fichier vide ou inexistant
+⚙️ Fonctionnalités principales
+🔹 histo
+
+Analyse des capacités et volumes (max, source, réel)
+
+Utilise un AVL indexé par identifiant
+
+Sortie optimisée pour grands fichiers
+
+🔹 src
+
+Calcul des volumes issus des sources
+
+Agrégation rapide via AVL
+
+🔹 real
+
+Traitement des volumes réellement distribués
+
+Génère un fichier intermédiaire returnreal.txt
+
+🔹 leaks (avec bonus)
+
+Construction complète du réseau hydraulique de l’usine
+
+Détection du tronçon qui perd le plus d’eau
+
+Navigation interactive dans le réseau via un mode debug
+
+Architecture :
+
+AVL = index rapide (ID → données)
+
+Arbre classique (enfant / frère) = topologie du réseau
+
+🧠 Architecture des données
+
+AVL
+
+Indexation par identifiant
+
+Union pour gérer :
+
+NodeH (historique)
+
+NodeL (fuites)
+
+Arbre classique (AC)
+
+Représentation du réseau
+
+Chaque nœud pointe vers ses données via NodeL
+
+Cette séparation permet :
+
+des recherches rapides (O(log n))
+
+une topologie simple et lisible
+
+aucune duplication inutile des données
+
+🧪 Mode Debug (leaks)
+
+Commandes disponibles :
+
+p        afficher le noeud courant
+ls       lister les enfants
+cd <i>   se déplacer vers un enfant
+up       remonter
+root     revenir à la racine
+path     afficher le chemin courant
+q        quitter
+
+🛠️ Compilation
+✅ Prérequis
+
+GNU Make
+
+GCC (Linux / MinGW sous Windows)
+
+▶️ Compiler
+make
+
+🧹 Nettoyer
+make clean
 
 
+Le Makefile est portable Linux / Windows (PowerShell).
+
+▶️ Exécution
+
+Exemple :
+
+./wildwater data.csv leaks "Facility complex #RH400057F" Facility.txt SourceL.txt
 
 
+Les scripts .sh fournis facilitent l’exécution selon le mode :
 
+src.sh
 
+real.sh
 
+leaks.sh
 
-*/
+max.sh
+
+📁 Organisation du projet
+.
+├── codeC/
+│   ├── AVL.c / .h
+│   ├── leaks.c / .h
+│   ├── histo.c / .h
+│   ├── ArbreC.c / .h
+│   ├── code.c
+│   ├── head.h
+│   ├── type.h
+│   └── build/
+│       └── *.o
+├── Makefile
+├── *.sh
+├── returnleaks.dat
+└── README.md
